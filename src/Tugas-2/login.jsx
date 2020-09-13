@@ -15,7 +15,7 @@ const Login = () => {
 
   const submitHandler = (event) => {
     event.preventDefault();
-    if (username == input.username && password == input.password) {
+    if (username === input.username && password === input.password) {
       setLogin("true");
       setInput({
         username: "",
