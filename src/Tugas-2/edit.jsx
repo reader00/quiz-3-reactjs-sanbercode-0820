@@ -33,8 +33,12 @@ const Edit = () => {
       search.value !== undefined ||
       search.value !== ""
     ) {
-      var data = movie.filter((el) =>
-        el.title.toLowerCase().includes(search.value.toLowerCase().trim())
+      var value = search.value.toLowerCase().trim();
+      var data = movie.filter(
+        (el) =>
+          el.title.toLowerCase().includes(value) ||
+          el.description.toLowerCase().includes(value) ||
+          el.genre.toLowerCase().includes(value)
       );
       if (data !== null || data !== undefined) {
         console.log(movie);
