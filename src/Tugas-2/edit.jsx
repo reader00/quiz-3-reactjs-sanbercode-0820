@@ -1,10 +1,14 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { WebContext } from "./Routes";
 
 const Edit = () => {
   const { movie, setMovie } = useContext(WebContext);
-  const [search, setSearch] = useState("");
+  const [dataShowed, setDataShowed] = useState(null);
+  const [search, setSearch] = useState({
+    value: "",
+    data: [],
+  });
   const [input, setInput] = useState({
     title: "",
     decription: "",
@@ -16,8 +20,40 @@ const Edit = () => {
     id: -1,
   });
 
+  useEffect(() => {
+    if (movie !== null) {
+      setDataShowed(movie);
+    }
+  }, [movie]);
+
   const searchHandler = (event) => {
     event.preventDefault();
+    if (
+      search.value !== null ||
+      search.value !== undefined ||
+      search.value !== ""
+    ) {
+      var data = movie.filter((el) =>
+        el.title.toLowerCase().includes(search.value.toLowerCase().trim())
+      );
+      if (data !== null || data !== undefined) {
+        console.log(movie);
+        console.log(data);
+        setSearch({ ...search, data });
+        setDataShowed(data);
+      }
+    } else {
+      setDataShowed(movie);
+      setSearch({
+        value: "",
+        data: [],
+      });
+    }
+  };
+
+  const searchInputHandler = (event) => {
+    var value = event.target.value;
+    setSearch({ ...search, value });
   };
 
   const editHandler = (event) => {
@@ -55,8 +91,6 @@ const Edit = () => {
         console.log(res.status);
       });
   };
-
-  const searchInputHandler = () => {};
 
   const submitHandler = (event) => {
     event.preventDefault();
@@ -163,7 +197,7 @@ const Edit = () => {
               <input
                 type="text"
                 onChange={searchInputHandler}
-                value={search}
+                value={search.value}
                 style={{ marginRight: "10px" }}
               />
               <button type="submit">Search</button>
@@ -184,8 +218,8 @@ const Edit = () => {
               </tr>
             </thead>
             <tbody>
-              {movie !== null &&
-                movie.map((el, index) => {
+              {dataShowed !== null &&
+                dataShowed.map((el, index) => {
                   var desc;
                   if (el.description !== undefined && el.description !== null) {
                     desc =
